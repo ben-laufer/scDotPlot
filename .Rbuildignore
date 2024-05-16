@@ -1,0 +1,5 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.tmp\.drivedownload$
+^\.tmp\.driveupload$
+^LICENSE\.md$

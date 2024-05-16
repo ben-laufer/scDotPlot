@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+*.Rproj
+docs
+.tmp.drivedownload
+.tmp.driveupload
+inst/doc
+.Rdata
+.httr-oauth
+.quarto

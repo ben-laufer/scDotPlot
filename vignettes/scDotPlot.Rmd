@@ -1,0 +1,196 @@
+---
+title: "scDotPlot"
+author: 
+  - name: "Ben Laufer"
+output: 
+  BiocStyle::html_document:
+    toc_float: TRUE
+date: "`r doc_date()`"
+package: "`r pkg_ver('scDotPlot')`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{scDotPlot}
+  %\VignetteEncoding{UTF-8}  
+---
+
+```{r Setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      crop = NULL)
+```
+
+# Introduction
+
+Dot plots of single-cell RNA-seq data allow for an examination of the relationships between cell groupings (e.g. clusters) and marker gene expression. The scDotPlot package offers a unified approach to perform a hierarchical clustering analysis and add annotations to the columns and/or rows of a scRNA-seq dot plot. It works with SingleCellExperiment and Seurat objects as well as data frames. The `scDotPlot()` function uses data from `scater::plotDots()` or `Seurat::DotPlot()` along with the `aplot` package to add dendrograms from `ggtree` and optional annotations.
+
+# Installation
+
+```{r Install, eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+}
+
+BiocManager::install("scDotPlot")
+```
+
+To install the development version directly from GitHub:
+
+```{r Install GitHub, eval = FALSE}
+if (!requireNamespace("remotes", quietly = TRUE)) {
+    install.packages("remotes")
+}
+
+remotes::install_github("ben-laufer/scDotPlot")
+```
+
+# SingleCellExperiment
+
+## Prepare object
+
+First, we normalize the object and then, for the purpose of this example, subset to remove cells without cell-type labels.
+
+```{r Prepare SingleCellExperiment}
+library(scRNAseq)
+library(scuttle)
+
+sce <- ZeiselBrainData()
+
+sce <- sce |> 
+    logNormCounts() |>  
+    subset(x = _, , level2class != "(none)")
+```
+
+## Get features
+
+The features argument accepts a character vector with the gene IDs. For this example, we quickly obtain the top markers of for each cell type and then add them to the rowData of the object.
+
+```{r Get features SingleCellExperiment}
+library(scran)
+library(purrr)
+library(dplyr)
+library(AnnotationDbi)
+
+features <- sce |>
+    scoreMarkers(sce$level1class) |>
+    map(~ .x |>
+            as.data.frame() |>
+            arrange(desc(mean.AUC))|>
+            dplyr::slice(1:6) |>
+            rownames()) |> 
+    unlist2()
+
+rowData(sce)$Marker <- features[match(rownames(sce), features)] |>
+    names()
+```
+
+## Plot logcounts
+
+Finally, we create the plot. The `group` arguments utilize the colData, while the `features` arguments use the rowData. The `paletteList` argument can be used to manually specify the colors for the annotations specified through `groupAnno` and `featureAnno`. The clustering of the columns shows that cell the cell sub-types cluster by cell-type, while the clustering of the rows shows that most of the markers clusters by their cell type.
+
+```{r Plot SingleCellExperiment logcounts, fig.width=12, fig.height=12}
+library(scDotPlot)
+library(ggsci)
+
+sce |>
+    scDotPlot(features = features,
+              group = "level2class",
+              groupAnno = "level1class",
+              featureAnno = "Marker",
+              groupLegends = FALSE,
+              annoColors = list("level1class" = pal_d3()(7),
+                                "Marker" = pal_d3()(7)),
+              annoWidth = 0.02)
+```
+
+## Plot Z-scores
+
+Plotting by Z-score through `scale = TRUE` improves the clustering result for the rows.
+
+```{r Plot SingleCellExperiment Z, fig.width=12, fig.height=12}
+sce |>
+    scDotPlot(scale = TRUE,
+              features = features,
+              group = "level2class",
+              groupAnno = "level1class",
+              featureAnno = "Marker",
+              groupLegends = FALSE,
+              annoColors = list("level1class" = pal_d3()(7),
+                                "Marker" = pal_d3()(7)),
+              annoWidth = 0.02)
+```
+
+# Seurat
+
+## Get features
+
+After loading the example Seurat object, we find the top markers for each cluster and add them to the assay of interest.
+
+```{r Get features Seurat}
+library(Seurat)
+library(SeuratObject)
+library(tibble)
+
+data("pbmc_small")
+
+features <- pbmc_small |>
+    FindAllMarkers(only.pos = TRUE, verbose = FALSE) |>
+    group_by(cluster) |>
+    dplyr::slice(1:6) |>
+    dplyr::select(cluster, gene)
+
+pbmc_small[[DefaultAssay(pbmc_small)]][[]] <- pbmc_small[[DefaultAssay(pbmc_small)]][[]] |>
+    rownames_to_column("gene") |> 
+    left_join(features, by = "gene") |> 
+    column_to_rownames("gene")
+
+features <- features |> 
+    deframe()
+```
+
+## Plot logcounts
+
+Plotting a Seurat object is similair to plotting a SingleCellExperiment object. 
+
+```{r Plot Seurat logcounts, fig.width=4, fig.height=5}
+pbmc_small |>
+    scDotPlot(features = features,
+              group = "RNA_snn_res.1",
+              groupAnno = "RNA_snn_res.1",
+              featureAnno = "cluster",
+              annoColors = list("RNA_snn_res.1" = pal_d3()(7),
+                                "cluster" = pal_d3()(7)),
+              groupLegends = FALSE,
+              annoWidth = 0.075)
+```
+
+## Plot Z-scores
+
+Again, we see that plotting by Z-score improves the clustering result for the rows.
+
+```{r Plot Seurat Z, fig.width=4, fig.height=5}
+pbmc_small |>
+    scDotPlot(scale = TRUE,
+              features = features,
+              group = "RNA_snn_res.1",
+              groupAnno = "RNA_snn_res.1",
+              featureAnno = "cluster",
+              annoColors = list("RNA_snn_res.1" = pal_d3()(7),
+                                "cluster" = pal_d3()(7)),
+              groupLegends = FALSE,
+              annoWidth = 0.075)
+```
+
+# Package support
+
+The [Bioconductor support site](https://support.bioconductor.org/) is the preferred method to ask for help. Before posting, it's recommended to check [previous posts](https://support.bioconductor.org/tag/scDotPlot/) for the answer and look over the [posting guide](http://www.bioconductor.org/help/support/posting-guide/). For the post, it's important to use the `scDotPlot` tag and provide both a minimal reproducible example and session information.
+
+# Acknowledgement 
+
+This package was inspired by the [single-cell example from aplot](https://yulab-smu.top/pkgdocs/aplot.html#a-single-cell-example).
+
+# Session info
+
+```{r Session info, echo=FALSE}
+sessionInfo()
+```
