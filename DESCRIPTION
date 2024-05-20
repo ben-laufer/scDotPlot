@@ -52,7 +52,6 @@ Suggests:
     AnnotationDbi,
     knitr,
     rmarkdown,
-    scQC,
     scran,
     scRNAseq,
     scuttle,
