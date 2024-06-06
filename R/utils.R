@@ -6,9 +6,9 @@
 #' @importFrom stats dist hclust
 #' @importFrom rlang sym
 #' @importFrom purrr set_names map reduce
-#' @import ggplot2
-#' @import ggtree
-#' @import aplot
+#' @importFrom ggplot2 scale_y_discrete
+#' @importFrom ggtree ggtree layout_dendrogram
+#' @importFrom aplot insert_top insert_left
 #' @importFrom magrittr %$% %>%
 #' @return A aplot
 #' @keywords internal
@@ -80,14 +80,14 @@
     (dotPlot +
             ggplot2::scale_y_discrete(position = "right")) %>%
         {if(!all(groupAnno == FALSE)){
-            purrr::reduce(ifelse(flipPlot == FALSE, colLabels, rowLabels),
+            purrr::reduce(if(flipPlot == FALSE){colLabels}else{rowLabels},
                           ~ aplot::insert_top(.x, .y, height = annoHeight),
                           .init = .)
         }else{
             .
         }} %>%
         {if(!all(featureAnno == FALSE)){
-            purrr::reduce(ifelse(flipPlot == FALSE, rowLabels, colLabels),
+            purrr::reduce(if(flipPlot == FALSE){rowLabels}else{colLabels},
                           ~ aplot::insert_left(.x, .y, width = annoWidth),
                           .init = .)
         }else{
@@ -106,7 +106,9 @@
 #' @importFrom dplyr mutate case_when
 #' @importFrom rlang sym
 #' @importFrom scales muted
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes geom_point scale_size_continuous
+#'  theme_bw theme element_blank guide_colorbar guide_legend
+#'  scale_fill_gradient2 scale_fill_gradientn
 #' @importFrom magrittr %>%
 #' @return A ggplot2
 #' @keywords internal
@@ -177,8 +179,8 @@
 
 #' @title Create column annotations
 #' @inheritParams scDotPlot
+#' @importFrom ggplot2 ggplot aes geom_tile theme_void guides guide_none
 #' @importFrom ggsci scale_fill_d3 scale_fill_cosmic
-#' @import ggplot2
 #' @importFrom purrr pluck
 #' @importFrom grDevices colorRampPalette
 #' @importFrom magrittr %$% %>%

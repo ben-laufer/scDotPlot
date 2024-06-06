@@ -183,7 +183,7 @@ scDotPlot.SingleCellExperiment <- function(object,
 #' @rdname scDotPlot
 #' @name scDotPlot
 #' @order 2
-#' @importFrom Seurat DotPlot DefaultAssay
+#' @importFrom Seurat DotPlot FetchData DefaultAssay
 #' @importFrom tibble as_tibble rownames_to_column
 #' @importFrom dplyr rename mutate left_join select distinct
 #' @importFrom rlang sym syms
@@ -233,10 +233,10 @@ scDotPlot.Seurat <- function(object,
         dplyr::mutate(NumDetected = NumDetected/100) %>%
         {if(!isFALSE(groupAnno)){
             dplyr::left_join(.,
-                             object@meta.data %>%
+                             object %>%
+                                 Seurat::FetchData(c(groupAnno, group)) %>%
                                  tibble::as_tibble() %>%
-                                 dplyr::select(!!!rlang::syms(groupAnno),
-                                               Group = !!rlang::sym(group)) %>%
+                                 dplyr::rename("Group" = !!rlang::sym(group)) %>%
                                  dplyr::distinct(),
                              by = "Group",
                              relationship = "many-to-many")
@@ -306,7 +306,11 @@ scDotPlot.default <- function(object,
                               flipPlot = FALSE,
                               ...){
     dotPlot <- object %>%
-        dplyr::mutate(Feature = factor(Feature, levels = features)) %>%
+        {if(!is.null(features)){
+            dplyr::mutate(., Feature = factor(Feature, levels = features))
+        }else{
+            .
+        }} %>%
         .baseDotPlot(group = group,
                      scale = scale,
                      AverageThreshold = AverageThreshold,
