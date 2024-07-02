@@ -11,6 +11,8 @@
   annoColors = NULL,
   groupLegends = TRUE,
   featureLegends = TRUE,
+  fontSize = 11,
+  fontFamily = "",
   flipPlot = FALSE
 )
 }
@@ -23,6 +25,10 @@ annotations}
 
 \item{featureLegends}{Logical indicating whether to show legends for feature
 annotations}
+
+\item{fontSize}{Numeric specifying the base font size in pts}
+
+\item{fontFamily}{Character specifying the base font family}
 
 \item{flipPlot}{Logical indicating whether to flip the x and y coordinates}
 }

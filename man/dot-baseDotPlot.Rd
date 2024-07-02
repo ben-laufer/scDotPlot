@@ -11,6 +11,8 @@
   AverageThreshold = NULL,
   NumDetectedThreshold = NULL,
   dotColors = NULL,
+  fontSize = 11,
+  fontFamily = "",
   flipPlot = FALSE
 )
 }
@@ -28,6 +30,10 @@ where values below AverageThreshold and NumDetectedThreshold are transparent}
 \item{dotColors}{A character vector specifying the colors to be used
 in the gradient for the dots. If scale is set to TRUE, the first 3 colors
 will be used for the negative, zero, and positive values, respectively.}
+
+\item{fontSize}{Numeric specifying the base font size in pts}
+
+\item{fontFamily}{Character specifying the base font family}
 
 \item{flipPlot}{Logical indicating whether to flip the x and y coordinates}
 }

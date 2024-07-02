@@ -42,6 +42,8 @@
 #'  annotations
 #' @param featureLegends Logical indicating whether to show legends for feature
 #'  annotations
+#' @param fontSize Numeric specifying the base font size in pts
+#' @param fontFamily Character specifying the base font family
 #' @param flipPlot Logical indicating whether to flip the x and y coordinates
 #' @param ... Additional unused arguments
 #' @details The data for the dot plot is generated from different sources
@@ -103,6 +105,8 @@ scDotPlot.SingleCellExperiment <- function(object,
                                            dotColors = NULL,
                                            groupLegends = TRUE,
                                            featureLegends = TRUE,
+                                           fontSize = 11,
+                                           fontFamily = "",
                                            flipPlot = FALSE,
                                            ...){
 
@@ -176,6 +180,8 @@ scDotPlot.SingleCellExperiment <- function(object,
                           dotColors = dotColors,
                           groupLegends = groupLegends,
                           featureLegends = featureLegends,
+                          fontSize = fontSize,
+                          fontFamily = fontFamily,
                           flipPlot = flipPlot,
                           ...)
 }
@@ -210,6 +216,8 @@ scDotPlot.Seurat <- function(object,
                              dotColors = NULL,
                              groupLegends = TRUE,
                              featureLegends = TRUE,
+                             fontSize = 11,
+                             fontFamily = "",
                              flipPlot = FALSE,
                              ...){
     if(!is.null(block) | !is.null(swap_rownames)){
@@ -275,6 +283,8 @@ scDotPlot.Seurat <- function(object,
                           dotColors = dotColors,
                           groupLegends = groupLegends,
                           featureLegends = featureLegends,
+                          fontSize = fontSize,
+                          fontFamily = fontFamily,
                           flipPlot = flipPlot,
                           ...)
 }
@@ -303,6 +313,8 @@ scDotPlot.default <- function(object,
                               dotColors = NULL,
                               groupLegends = TRUE,
                               featureLegends = TRUE,
+                              fontSize = 11,
+                              fontFamily = "",
                               flipPlot = FALSE,
                               ...){
     dotPlot <- object %>%
@@ -316,6 +328,8 @@ scDotPlot.default <- function(object,
                      AverageThreshold = AverageThreshold,
                      NumDetectedThreshold = NumDetectedThreshold,
                      dotColors = dotColors,
+                     fontSize = fontSize,
+                     fontFamily = fontFamily,
                      flipPlot = flipPlot)
 
     if(any(cluster == TRUE, !is.null(groupAnno), !is.null(featureAnno))){
@@ -330,6 +344,8 @@ scDotPlot.default <- function(object,
                              annoColors = annoColors,
                              groupLegends = groupLegends,
                              featureLegends = featureLegends,
+                             fontSize = fontSize,
+                             fontFamily = fontFamily,
                              flipPlot = flipPlot)
     }else{
         dotPlot

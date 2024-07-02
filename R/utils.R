@@ -24,6 +24,8 @@
                              annoColors = NULL,
                              groupLegends = TRUE,
                              featureLegends = TRUE,
+                             fontSize = 11,
+                             fontFamily = "",
                              flipPlot = FALSE){
 
     plotMatrix <- dotPlot %$%
@@ -42,7 +44,11 @@
                        dotPlot = dotPlot,
                        annoColors = annoColors,
                        groupLegends = groupLegends,
+                       fontSize = fontSize,
+                       fontFamily = fontFamily,
                        flipPlot = flipPlot)
+    }else{
+        colLabels <- NULL
     }
 
     if(!all(featureAnno == FALSE)){
@@ -53,7 +59,11 @@
                        dotPlot = dotPlot,
                        annoColors = annoColors,
                        featureLegends = featureLegends,
+                       fontSize = fontSize,
+                       fontFamily = fontFamily,
                        flipPlot = flipPlot)
+    }else{
+        rowLabels <- NULL
     }
 
     treeRow <- plotMatrix %>%
@@ -79,20 +89,12 @@
 
     (dotPlot +
             ggplot2::scale_y_discrete(position = "right")) %>%
-        {if(!all(groupAnno == FALSE)){
-            purrr::reduce(if(flipPlot == FALSE){colLabels}else{rowLabels},
-                          ~ aplot::insert_top(.x, .y, height = annoHeight),
-                          .init = .)
-        }else{
-            .
-        }} %>%
-        {if(!all(featureAnno == FALSE)){
-            purrr::reduce(if(flipPlot == FALSE){rowLabels}else{colLabels},
-                          ~ aplot::insert_left(.x, .y, width = annoWidth),
-                          .init = .)
-        }else{
-            .
-        }} %>%
+        purrr::reduce(if(flipPlot == FALSE){colLabels}else{rowLabels},
+                      ~ aplot::insert_top(.x, .y, height = annoHeight),
+                      .init = .) %>%
+        purrr::reduce(if(flipPlot == FALSE){rowLabels}else{colLabels},
+                      ~ aplot::insert_left(.x, .y, width = annoWidth),
+                      .init = .) %>%
         {if(cluster == TRUE){
             aplot::insert_left(., treeRow, width = treeWidth) %>%
                 aplot::insert_top(treeCol, height = treeHeight)
@@ -119,6 +121,8 @@
                          AverageThreshold = NULL,
                          NumDetectedThreshold = NULL,
                          dotColors = NULL,
+                         fontSize = 11,
+                         fontFamily = "",
                          flipPlot = FALSE){
 
     stopifnot(c("NumDetected", "Feature", "Group", "Average") %in% names(plotData))
@@ -151,7 +155,8 @@
             ggplot2::geom_point(shape = 21,
                                 color = "black") +
             ggplot2::scale_size_continuous(labels = scales::label_percent()) +
-            ggplot2::theme_bw() +
+            ggplot2::theme_bw(base_size = fontSize,
+                              base_family = fontFamily) +
             ggplot2::theme(axis.title = ggplot2::element_blank(),
                            axis.line = ggplot2::element_blank(),
                            axis.ticks = ggplot2::element_blank(),
@@ -193,6 +198,8 @@
                         annoColors = NULL,
                         groupLegends = TRUE,
                         featureLegends = TRUE,
+                        fontSize = 11,
+                        fontFamily = "",
                         flipPlot = FALSE){
 
     annoType <- match.arg(annoType)
@@ -220,7 +227,8 @@
         }} +
         ggplot2::geom_tile(color = "black",
                            linewidth = 0.25) +
-        ggplot2::theme_void()
+        ggplot2::theme_void(base_size = fontSize,
+                            base_family = fontFamily)
 
     labelLevels <- plotData %>%
         purrr::pluck(annoLabel) %>%
