@@ -6,7 +6,8 @@
 \usage{
 .annotateDotPlot(
   dotPlot,
-  cluster = TRUE,
+  clusterRows = TRUE,
+  clusterColumns = TRUE,
   groupAnno = FALSE,
   featureAnno = FALSE,
   treeWidth = 0.1,
@@ -22,8 +23,11 @@
 )
 }
 \arguments{
-\item{cluster}{Logical specifying whether to perform hierarchical clustering
-analysis}
+\item{clusterRows}{Logical specifying whether to perform hierarchical clustering
+analysis on the rows}
+
+\item{clusterColumns}{Logical specifying whether to perform hierarchical clustering
+analysis on the columns}
 
 \item{groupAnno}{Cell annotations that are stored as names of columns
 in colData of sce with annotations}

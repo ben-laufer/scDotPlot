@@ -15,6 +15,8 @@
   swap_rownames = NULL,
   scale = FALSE,
   cluster = TRUE,
+  clusterRows = cluster,
+  clusterColumns = cluster,
   AverageThreshold = ifelse(scale == FALSE, 0, -Inf),
   NumDetectedThreshold = 0.01,
   groupAnno = FALSE,
@@ -41,6 +43,8 @@
   swap_rownames = NULL,
   scale = FALSE,
   cluster = TRUE,
+  clusterRows = cluster,
+  clusterColumns = cluster,
   AverageThreshold = ifelse(scale == FALSE, 0, -Inf),
   NumDetectedThreshold = 0.01,
   groupAnno = FALSE,
@@ -67,6 +71,8 @@
   swap_rownames = NULL,
   scale = FALSE,
   cluster = TRUE,
+  clusterRows = cluster,
+  clusterColumns = cluster,
   AverageThreshold = ifelse(scale == FALSE, 0, -Inf),
   NumDetectedThreshold = 0.01,
   groupAnno = FALSE,
@@ -108,7 +114,13 @@ object to match to features}
 \item{scale}{Logical indicating whether the data should be scaled and centered}
 
 \item{cluster}{Logical specifying whether to perform hierarchical clustering
-analysis}
+analysis on both the rows and columns}
+
+\item{clusterRows}{Logical specifying whether to perform hierarchical clustering
+analysis on the rows}
+
+\item{clusterColumns}{Logical specifying whether to perform hierarchical clustering
+analysis on the columns}
 
 \item{AverageThreshold}{Numeric specifying threshold for average expression,
 where values below AverageThreshold and NumDetectedThreshold are transparent}

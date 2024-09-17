@@ -20,7 +20,11 @@
 #' @param NumDetectedThreshold Numeric specifying threshold for fraction of cells,
 #'  where values below AverageThreshold and NumDetectedThreshold are transparent
 #' @param cluster Logical specifying whether to perform hierarchical clustering
-#'  analysis
+#'  analysis on both the rows and columns
+#' @param clusterRows Logical specifying whether to perform hierarchical clustering
+#'  analysis on the rows
+#' @param clusterColumns Logical specifying whether to perform hierarchical clustering
+#'  analysis on the columns
 #' @param groupAnno Cell annotations that are stored as names of columns
 #'  in colData of sce with annotations
 #' @param featureAnno Feature annotations that are stored as names of rows
@@ -93,6 +97,8 @@ scDotPlot.SingleCellExperiment <- function(object,
                                            swap_rownames = NULL,
                                            scale = FALSE,
                                            cluster = TRUE,
+                                           clusterRows = cluster,
+                                           clusterColumns = cluster,
                                            AverageThreshold = ifelse(scale == FALSE, 0, -Inf),
                                            NumDetectedThreshold = 0.01,
                                            groupAnno = FALSE,
@@ -168,6 +174,8 @@ scDotPlot.SingleCellExperiment <- function(object,
                           features = features,
                           scale = scale,
                           cluster = cluster,
+                          clusterRows = clusterRows,
+                          clusterColumns = clusterColumns,
                           AverageThreshold = AverageThreshold,
                           NumDetectedThreshold = NumDetectedThreshold,
                           groupAnno = groupAnno,
@@ -204,6 +212,8 @@ scDotPlot.Seurat <- function(object,
                              swap_rownames = NULL,
                              scale = FALSE,
                              cluster = TRUE,
+                             clusterRows = cluster,
+                             clusterColumns = cluster,
                              AverageThreshold = ifelse(scale == FALSE, 0, -Inf),
                              NumDetectedThreshold = 0.01,
                              groupAnno = FALSE,
@@ -271,6 +281,8 @@ scDotPlot.Seurat <- function(object,
                           features = features,
                           scale = scale,
                           cluster = cluster,
+                          clusterRows = clusterRows,
+                          clusterColumns = clusterColumns,
                           AverageThreshold = AverageThreshold,
                           NumDetectedThreshold = NumDetectedThreshold,
                           groupAnno = groupAnno,
@@ -301,6 +313,8 @@ scDotPlot.default <- function(object,
                               swap_rownames = NULL,
                               scale = FALSE,
                               cluster = TRUE,
+                              clusterRows = cluster,
+                              clusterColumns = cluster,
                               AverageThreshold = ifelse(scale == FALSE, 0, -Inf),
                               NumDetectedThreshold = 0.01,
                               groupAnno = FALSE,
@@ -334,7 +348,8 @@ scDotPlot.default <- function(object,
 
     if(any(cluster == TRUE, !is.null(groupAnno), !is.null(featureAnno))){
         dotPlot %>%
-            .annotateDotPlot(cluster = cluster,
+            .annotateDotPlot(clusterRows = clusterRows,
+                             clusterColumns = clusterColumns,
                              groupAnno = groupAnno,
                              featureAnno = featureAnno,
                              treeWidth = treeWidth,

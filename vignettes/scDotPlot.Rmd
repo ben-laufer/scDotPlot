@@ -88,7 +88,7 @@ rowData(sce)$Marker <- features[match(rownames(sce), features)] |>
 
 Finally, we create the plot. The `group` arguments utilize the colData, while the `features` arguments use the rowData. The `paletteList` argument can be used to manually specify the colors for the annotations specified through `groupAnno` and `featureAnno`. The clustering of the columns shows that cell the cell sub-types cluster by cell-type, while the clustering of the rows shows that most of the markers clusters by their cell type.
 
-```{r Plot SingleCellExperiment logcounts, fig.width=12, fig.height=12, dpi=50}
+```{r scePlot1, fig.cap = "scDotPlot of SingleCellExperiment logcounts", fig.width=12, fig.height=12, dpi=50}
 library(scDotPlot)
 library(ggsci)
 
@@ -107,7 +107,7 @@ sce |>
 
 Plotting by Z-score through `scale = TRUE` improves the clustering result for the rows.
 
-```{r Plot SingleCellExperiment Z, fig.width=12, fig.height=12, dpi=50}
+```{r scePlot2, fig.cap = "scDotPlot of SingleCellExperiment Z-scores", fig.width=12, fig.height=12, dpi=50}
 sce |>
     scDotPlot(scale = TRUE,
               features = features,
@@ -150,9 +150,9 @@ features <- features |>
 
 ## Plot logcounts
 
-Plotting a Seurat object is similair to plotting a SingleCellExperiment object. 
+Plotting a Seurat object is similar to plotting a SingleCellExperiment object. 
 
-```{r Plot Seurat logcounts, fig.width=4, fig.height=5, out.width="50%", out.height="50%", dpi=50}
+```{r SeuratPlot1, fig.cap = "scDotPlot of Seurat logcounts", fig.width=4, fig.height=5, out.width="75%", out.height="75%", dpi=50}
 pbmc_small |>
     scDotPlot(features = features,
               group = "RNA_snn_res.1",
@@ -168,7 +168,7 @@ pbmc_small |>
 
 Again, we see that plotting by Z-score improves the clustering result for the rows.
 
-```{r Plot Seurat Z, fig.width=4, fig.height=5, out.width="50%", out.height="50%", dpi=50}
+```{r SeuratPlot2, fig.cap = "scDotPlot of Seurat Z-scores", fig.width=4, fig.height=5, out.width="75%", out.height="75%", dpi=50}
 pbmc_small |>
     scDotPlot(scale = TRUE,
               features = features,

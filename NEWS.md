@@ -1,3 +1,7 @@
+# scDotPlot 0.99.4
+
+* Addition of seperate clusterRows and clusterColumns arguments 
+
 # scDotPlot 0.99.3
 
 * Bug fix for flipPlot argument as well as addition of font customization arguments and graphical unit tests

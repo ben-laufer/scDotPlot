@@ -14,7 +14,8 @@
 #' @keywords internal
 #'
 .annotateDotPlot <- function(dotPlot,
-                             cluster = TRUE,
+                             clusterRows = TRUE,
+                             clusterColumns = TRUE,
                              groupAnno = FALSE,
                              featureAnno = FALSE,
                              treeWidth = 0.1,
@@ -95,9 +96,13 @@
         purrr::reduce(if(flipPlot == FALSE){rowLabels}else{colLabels},
                       ~ aplot::insert_left(.x, .y, width = annoWidth),
                       .init = .) %>%
-        {if(cluster == TRUE){
-            aplot::insert_left(., treeRow, width = treeWidth) %>%
-                aplot::insert_top(treeCol, height = treeHeight)
+        {if(clusterRows == TRUE){
+            aplot::insert_left(., treeRow, width = treeWidth)
+        }else{
+            .
+        }} %>%
+        {if(clusterColumns == TRUE){
+            aplot::insert_top(., treeCol, height = treeHeight)
         }else{
             .
         }}
@@ -140,7 +145,7 @@
 
     (plotData %>%
             dplyr::mutate(alpha = dplyr::case_when(Average > !!AverageThreshold &
-                                                       NumDetected > NumDetectedThreshold ~ 1,
+                                                       NumDetected > !!NumDetectedThreshold ~ 1,
                                                    .default = 0.1)) %>%
             {if(flipPlot == FALSE){
                 ggplot2::ggplot(., ggplot2::aes(x = !!rlang::sym(group),
