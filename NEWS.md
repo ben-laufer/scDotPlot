@@ -1,3 +1,7 @@
+# scDotPlot 1.1.1
+
+* Enabled clustering for a group with annotations for a single feature
+
 # scDotPlot 0.99.4
 
 * Addition of seperate clusterRows and clusterColumns arguments 

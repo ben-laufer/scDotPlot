@@ -67,26 +67,30 @@
         rowLabels <- NULL
     }
 
-    treeRow <- plotMatrix %>%
-        {if(flipPlot == FALSE){
-            .
-        }else if(flipPlot == TRUE){
-            t(.)
-        }} %>%
-        stats::dist() %>%
-        stats::hclust() %>%
-        ggtree::ggtree(branch.length = "none")
+    if(clusterRows == TRUE){
+        treeRow <- plotMatrix %>%
+            {if(flipPlot == FALSE){
+                .
+            }else if(flipPlot == TRUE){
+                t(.)
+            }} %>%
+            stats::dist() %>%
+            stats::hclust() %>%
+            ggtree::ggtree(branch.length = "none")
+    }
 
-    treeCol <- plotMatrix %>%
-        {if(flipPlot == FALSE){
-            t(.)
-        }else if(flipPlot == TRUE){
-            .
-        }} %>%
-        stats::dist() %>%
-        stats::hclust() %>%
-        ggtree::ggtree(branch.length = "none") +
-        ggtree::layout_dendrogram()
+    if(clusterColumns == TRUE){
+        treeCol <- plotMatrix %>%
+            {if(flipPlot == FALSE){
+                t(.)
+            }else if(flipPlot == TRUE){
+                .
+            }} %>%
+            stats::dist() %>%
+            stats::hclust() %>%
+            ggtree::ggtree(branch.length = "none") +
+            ggtree::layout_dendrogram()
+    }
 
     (dotPlot +
             ggplot2::scale_y_discrete(position = "right")) %>%
