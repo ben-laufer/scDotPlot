@@ -1,6 +1,6 @@
 Package: scDotPlot
 Title: Cluster a Single-cell RNA-seq Dot Plot
-Version: 1.2.0
+Version: 1.3.0
 Authors@R: c(
     person(given = c("Benjamin", "I"),
            family = "Laufer",
