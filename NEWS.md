@@ -1,3 +1,7 @@
+# scDotPlot 1.2.1
+
+* Updates for new major version of ggplot2
+
 # scDotPlot 1.1.1
 
 * Enabled clustering for a group with annotations for a single feature

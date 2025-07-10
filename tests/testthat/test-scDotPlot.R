@@ -4,7 +4,7 @@ test_that("base plot works", {
         scDotPlot(cluster = FALSE,
                   features = VariableFeatures(.),
                   group = "RNA_snn_res.1") %T>%
-        expect_s3_class("ggplot") %>%
+        {expect_true(is_ggplot(.))} %>%
         expect_doppelganger("base plot", .)
 })
 
@@ -13,6 +13,7 @@ test_that("plot annotation works", {
     pbmc_small %>%
         scDotPlot(features = VariableFeatures(.),
                   group = "RNA_snn_res.1") %T>%
+        suppressWarnings() %T>% # https://github.com/YuLab-SMU/ggtree/issues/656
         expect_s3_class("aplot") %>%
         expect_doppelganger("plot annotation", .)
 })

@@ -9,7 +9,7 @@
 #' @importFrom ggplot2 scale_y_discrete
 #' @importFrom ggtree ggtree layout_dendrogram
 #' @importFrom aplot insert_top insert_left
-#' @importFrom magrittr %$% %>%
+#' @importFrom magrittr %>%
 #' @return A aplot
 #' @keywords internal
 #'
@@ -29,8 +29,7 @@
                              fontFamily = "",
                              flipPlot = FALSE){
 
-    plotMatrix <- dotPlot %$%
-        data %>%
+    plotMatrix <- dotPlot$data %>%
         tibble::as_tibble() %>%
         dplyr::select(Feature, Group, Average) %>%
         tidyr::pivot_wider(names_from = Group, values_from = Average) %>%
@@ -197,7 +196,7 @@
 #' @importFrom ggsci scale_fill_d3 scale_fill_cosmic
 #' @importFrom purrr pluck
 #' @importFrom grDevices colorRampPalette
-#' @importFrom magrittr %$% %>%
+#' @importFrom magrittr %>%
 #' @return A ggplot2
 #' @keywords internal
 #'
@@ -213,8 +212,7 @@
 
     annoType <- match.arg(annoType)
 
-    plotData <- dotPlot %$%
-        data
+    plotData <- dotPlot$data
 
     p1 <- plotData %>%
         {if(annoType == "column" & flipPlot == FALSE){
