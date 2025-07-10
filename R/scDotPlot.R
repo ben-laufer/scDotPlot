@@ -82,7 +82,8 @@ scDotPlot <- function(object,
 #' @importFrom stringr str_sort
 #' @import ggplot2
 #' @importFrom cli cli_abort
-#' @importFrom magrittr %>% %$%
+#' @importFrom utils packageVersion
+#' @importFrom magrittr %>%
 #' @examples
 #' data("pbmc_small", package = "SeuratObject")
 #' pbmc_small |>
@@ -129,14 +130,13 @@ scDotPlot.SingleCellExperiment <- function(object,
                              purrr::set_names(rep("x", length(missingFeatures)))))
     }
 
-    object %>%
-        scater::plotDots(features = features,
-                         group = group,
-                         block = block,
-                         swap_rownames = swap_rownames,
-                         scale = scale,
-                         center = scale) %$%
-        data %>%
+    {object %>%
+            scater::plotDots(features = features,
+                             group = group,
+                             block = block,
+                             swap_rownames = swap_rownames,
+                             scale = scale,
+                             center = scale)}$data %>%
         tibble::as_tibble() %>%
         {if(!isFALSE(groupAnno)){
             dplyr::left_join(.,
@@ -202,7 +202,9 @@ scDotPlot.SingleCellExperiment <- function(object,
 #' @importFrom dplyr rename mutate left_join select distinct
 #' @importFrom rlang sym syms
 #' @importFrom cli cli_abort
-#' @importFrom magrittr %>% %$%
+#' @importFrom utils packageVersion
+#' @importFrom stats setNames
+#' @importFrom magrittr %>%
 #' @export
 #'
 scDotPlot.Seurat <- function(object,
@@ -237,12 +239,11 @@ scDotPlot.Seurat <- function(object,
                for information about how to convert the object.")
     }
 
-    object %>%
-        Seurat::DotPlot(object = .,
-                        features = features,
-                        group.by = group,
-                        scale = scale) %$%
-        data %>%
+    {object %>%
+            Seurat::DotPlot(object = .,
+                            features = stats::setNames(features, NULL),
+                            group.by = group,
+                            scale = scale)}$data %>%
         tibble::as_tibble() %>%
         dplyr::rename(Average = avg.exp.scaled,
                       NumDetected = pct.exp,
